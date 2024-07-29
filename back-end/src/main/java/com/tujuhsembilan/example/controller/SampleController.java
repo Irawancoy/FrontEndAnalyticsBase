@@ -1,5 +1,7 @@
 package com.tujuhsembilan.example.controller;
 
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +18,9 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/sample")
 public class SampleController {
@@ -40,6 +44,25 @@ public class SampleController {
   @GetMapping("/multiple-exception")
   public ResponseEntity<?> multipleException() {
     throw new MultipleException(new EntityNotFoundException("Test1"), new IndexOutOfBoundsException("Test2"));
+  }
+
+  @PostMapping("/logError")
+  public ResponseEntity<String> logError(@RequestBody Map<String, Object> errorDetails) {
+    String error = (String) errorDetails.get("error");
+    @SuppressWarnings("unchecked")
+    Map<String, Object> errorInfo = (Map<String, Object>) errorDetails.get("errorInfo");
+    
+    String componentStack = (String) errorInfo.get("componentStack");
+    String message = (String) errorInfo.get("message");
+    String stack = (String) errorInfo.get("stack");
+    
+    log.error("Error: {}", error);
+    log.error("Component Stack: {}", componentStack);
+    log.error("Message: {}", message);
+    log.error("Stack: {}", stack);
+
+    return ResponseEntity.ok("Berhasil");
+
   }
 
 }
