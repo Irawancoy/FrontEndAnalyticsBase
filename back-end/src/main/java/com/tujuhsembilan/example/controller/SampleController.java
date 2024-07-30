@@ -48,20 +48,22 @@ public class SampleController {
 
   @PostMapping("/logError")
   public ResponseEntity<String> logError(@RequestBody Map<String, Object> errorDetails) {
-    String error = (String) errorDetails.get("error");
+
     @SuppressWarnings("unchecked")
+    //mengambil errorInfo dari errorDetails
     Map<String, Object> errorInfo = (Map<String, Object>) errorDetails.get("errorInfo");
     
+    //mengambil data dari errorInfo
     String componentStack = (String) errorInfo.get("componentStack");
     String message = (String) errorInfo.get("message");
     String stack = (String) errorInfo.get("stack");
-    
-    log.error("Error: {}", error);
+
+    //menampilkan error ke log 
     log.error("Component Stack: {}", componentStack);
     log.error("Message: {}", message);
     log.error("Stack: {}", stack);
 
-    return ResponseEntity.ok("Berhasil");
+    return ResponseEntity.ok("Logged");
 
   }
 

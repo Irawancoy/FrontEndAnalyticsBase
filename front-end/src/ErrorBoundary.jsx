@@ -1,4 +1,5 @@
 import React from 'react';
+import reportWebVitals from './reportWebVitals';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -10,18 +11,20 @@ class ErrorBoundary extends React.Component {
     return { hasError: true };
   }
 
+  //menggunakan componentDidCatch untuk mengirim error ke backend
   componentDidCatch(error, errorInfo) {
     this.logErrorToBackend(error, errorInfo);
   }
 
+  //mengirim error ke backend
   logErrorToBackend(error, errorInfo) {
     fetch('http://localhost:8091/sample/logError', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      //mengirim error ke backend dengan format JSON yang berisi errorInfo
       body: JSON.stringify({
-        error: error.toString(),
         errorInfo: {
           componentStack: errorInfo.componentStack,
           message: error.message,
